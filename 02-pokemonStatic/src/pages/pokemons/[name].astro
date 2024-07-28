@@ -23,6 +23,7 @@ const { name } = Astro.params;
 const { url } = Astro.props; // de aquí también puedo sacar el name
 
 const id = url.split("/").at(-2);
+const audioSrc = `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${id}.ogg`;
 ---
 
 <Main title="Pokemons Pages">
@@ -31,5 +32,9 @@ const id = url.split("/").at(-2);
     <span class="text-xl text-slate-400">Su id es: {id}</span>
     <a href="/">Return</a>
     <PokemonCard name={name} url={`${url}`} />
+    <audio controls class="mt-10">
+      <source src={audioSrc} type="audio/ogg" />
+      Your brawser does not support tha audio element
+    </audio>
   </section>
 </Main>
