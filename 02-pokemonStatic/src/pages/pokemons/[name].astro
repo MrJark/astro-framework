@@ -37,9 +37,14 @@ const { url } = Astro.props; // de aquí también puedo sacar el name
 
 const id = url.split("/").at(-2);
 const audioSrc = `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${id}.ogg`;
+const imageSrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
 ---
 
-<Main title="Pokemons Pages">
+<Main
+  title={`Pokemon ${name} - #${id} `}
+  description={`Información sobre ${name}`}
+  image={imageSrc}
+>
   <section class="flex flex-col justify-center items-center mt-10 mx-10">
     <h1 class="text-5xl capitalize">{name}</h1>
     <section class="flex flex-row text-center items-center gap-4">
