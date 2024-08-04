@@ -37,10 +37,20 @@ const { page } = Astro.props;
       ) /* no nos hace falta el key porque al ser contenido estático 'no se puede mover' */
     }
   </section>
-  <section class="flex gap-2 px-10 mt-10 items-center justify-center">
-    <a class="btn" href="">Next</a>
-    <span>Pagina</span>
-    <a class="btn" href="">Preview</a>
+  <section class="flex gap-10 px-10 mt-10 items-center justify-center">
+    <a class:list={["btn", !page.url.prev && "disabled"]} href={page.url.prev}
+      >Preview</a
+    >
+    <span class="text-xl font-bold">{page.currentPage}</span>
+    <a
+      class:list={[
+        "btn",
+        {
+          disabled: !page.url.next,
+        },
+      ]}
+      href={page.url.next}>Next</a
+    >
   </section>
 </Main>
 
@@ -49,6 +59,6 @@ const { page } = Astro.props;
     @apply bg-pink-500 text-white px-6 py-1 rounded-full;
   }
   .disabled {
-    @apply bg-gray-600 text-gray-400;
+    @apply bg-gray-600 text-gray-400 hover:cursor-not-allowed;
   }
 </style>
