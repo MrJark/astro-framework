@@ -2,44 +2,29 @@
 import type { GetStaticPaths } from "astro";
 import Main from "../../layouts/Main.astro";
 import type { PokemonListResponse } from "../../interfaces/pokemon-list-response";
-import PokemonCard from "src/components/pokemon/PokemonCard.astro";
+import PokemonCard from "../../components/pokemon/PokemonCard.astro";
 
-// Esto es para crear las rutas estáticas espsonalizdas.
-// Los params en este caso son los fragmentos de url que son 'dinámicos' y las props son las que tiene el propio elemento
-// forma async y automática de generar las páginas
 export const getStaticPaths = (async () => {
   const resp = await fetch(" https://pokeapi.co/api/v2/pokemon?limit=151");
   const { results } = (await resp.json()) as PokemonListResponse; // el results es la respuesta de la llamada a la URL. No es un nombre inventado. y es donde vienen todos los pokemon, los 151
   // console.log("hola mundo", results);
 
-  return results.map((results) => ({
-    params: { name: results.name },
-    props: { name: results.name, url: results.url },
-  }));
+  return results.map(({ name, url }) => {
+    const id = url.split("/").at(-2);
+
+    return {
+      params: { id: id },
+      props: { name: name, url: url },
+    };
+  });
 }) satisfies GetStaticPaths;
-// forma manual de generar las páginas
-// export const getStaticPaths = (() => {
-//   return [
-//     {
-//       params: { name: "bulbasaur" },
-//       props: { url: "https://pokeapi.co/api/v2/pokemon/1/" },
-//     },
-//     {
-//       params: { name: "charmander" },
-//       props: { url: "https://pokeapi.co/api/v2/pokemon/4/" },
-//     },
-//   ];
-// }) satisfies GetStaticPaths;
+const { id } = Astro.params;
+const { url, name } = Astro.props; // de aquí también puedo sacar el name
 
-// con Astro.params puedes conseguir el nombre que has sacado en los getStaticPaths
-const { name } = Astro.params;
-const { url } = Astro.props; // de aquí también puedo sacar el name
-
-const id = url.split("/").at(-2);
 const audioSrc = `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${id}.ogg`;
 ---
 
-<Main title="Pokemons Pages">
+<Main title="Pokemon ID page">
   <section class="flex flex-col justify-center items-center mt-10 mx-10">
     <h1 class="text-5xl capitalize">{name}</h1>
     <section class="flex flex-row text-center items-center gap-4">
@@ -53,4 +38,3 @@ const audioSrc = `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pok
     </audio>
   </section>
 </Main>
-{/* https://pokeapi.co/api/v2/pokemon?limit=151 */}

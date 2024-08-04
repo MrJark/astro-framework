@@ -3,6 +3,7 @@ interface Props {
   name: string;
   url: string;
   isBig?: boolean;
+  // ID?: number;
 }
 
 const { url, name, isBig = false } = Astro.props;
@@ -11,7 +12,7 @@ const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprit
 ---
 
 <a
-  href={`/pokemons/${name}`}
+  href={`/pokemon/${id}`}
   class:list={[
     "rounded flex flex-col justify-center items-center p-2",
     !isBig && "border",
