@@ -2,10 +2,16 @@
 import type { GetStaticPaths } from "astro";
 import Main from "../../layouts/Main.astro";
 import PokemonCard from "../../pokemon/PokemonCard.astro";
+import type { PokemonListResponse } from "../../interfaces/pokemon-list-response";
 
 // Esto es para crear las rutas estáticas espsonalizdas.
 // Los params en este caso son los fragmentos de url que son 'dinámicos' y las props son las que tiene el propio elemento
-export const getStaticPaths = (() => {
+// forma async y automática de generar las páginas
+export const getStaticPaths = (async () => {
+  const resp = await fetch(" https://pokeapi.co/api/v2/pokemon?limit=151");
+  const { results } = (await resp.json()) as PokemonListResponse; // el results es la respuesta de la llamada a la URL. No es un nombre inventado.
+  console.log("hola mundo", results);
+
   return [
     {
       params: { name: "bulbasaur" },
@@ -17,6 +23,19 @@ export const getStaticPaths = (() => {
     },
   ];
 }) satisfies GetStaticPaths;
+// forma manual de generar las páginas
+// export const getStaticPaths = (() => {
+//   return [
+//     {
+//       params: { name: "bulbasaur" },
+//       props: { url: "https://pokeapi.co/api/v2/pokemon/1/" },
+//     },
+//     {
+//       params: { name: "charmander" },
+//       props: { url: "https://pokeapi.co/api/v2/pokemon/4/" },
+//     },
+//   ];
+// }) satisfies GetStaticPaths;
 
 // con Astro.params puedes conseguir el nombre que has sacado en los getStaticPaths
 const { name } = Astro.params;
@@ -38,3 +57,4 @@ const audioSrc = `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pok
     </audio>
   </section>
 </Main>
+{/* https://pokeapi.co/api/v2/pokemon?limit=151 */}
