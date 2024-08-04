@@ -9,19 +9,13 @@ import type { PokemonListResponse } from "../../interfaces/pokemon-list-response
 // forma async y automática de generar las páginas
 export const getStaticPaths = (async () => {
   const resp = await fetch(" https://pokeapi.co/api/v2/pokemon?limit=151");
-  const { results } = (await resp.json()) as PokemonListResponse; // el results es la respuesta de la llamada a la URL. No es un nombre inventado.
-  console.log("hola mundo", results);
+  const { results } = (await resp.json()) as PokemonListResponse; // el results es la respuesta de la llamada a la URL. No es un nombre inventado. y es donde vienen todos los pokemon, los 151
+  // console.log("hola mundo", results);
 
-  return [
-    {
-      params: { name: "bulbasaur" },
-      props: { url: "https://pokeapi.co/api/v2/pokemon/1/" },
-    },
-    {
-      params: { name: "charmander" },
-      props: { url: "https://pokeapi.co/api/v2/pokemon/4/" },
-    },
-  ];
+  return results.map((results) => ({
+    params: { name: results.name },
+    props: { name: results.name, url: results.url },
+  }));
 }) satisfies GetStaticPaths;
 // forma manual de generar las páginas
 // export const getStaticPaths = (() => {
@@ -48,9 +42,11 @@ const audioSrc = `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pok
 <Main title="Pokemons Pages">
   <section class="flex flex-col justify-center items-center mt-10 mx-10">
     <h1 class="text-5xl capitalize">{name}</h1>
-    <span class="text-xl text-slate-400">Its ID: {id}</span>
-    <a href="/">Return</a>
-    <PokemonCard name={name} url={`${url}`} />
+    <section class="flex flex-row text-center items-center gap-4">
+      <span class="text-xl text-slate-200">Its ID: {id}</span>
+      <span><a class="text-pink-400 underline" href="/">Go Home</a></span>
+    </section>
+    <PokemonCard name={name} url={`${url}`} isBig={true} />
     <audio controls class="mt-10">
       <source src={audioSrc} type="audio/ogg" />
       Your brawser does not support tha audio element
